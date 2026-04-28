@@ -53,3 +53,4 @@ const Video = mongoose.model("Video", videoSchema);
 
 export default Video;
 
+// https://res.cloudinary.com/dph6daqds/image/upload/f_auto,q_auto/japan-artistic-3840x2160-25406_lcs6hw
