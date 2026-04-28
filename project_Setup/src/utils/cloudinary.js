@@ -15,9 +15,11 @@ cloudinary.config({
 
 const uploadCloudinary = async (filePath) => {
     try {
-        if (!filePath) 
+        if (!filePath) {
+
             console.log('Could not find path');
             return null;
+        }
 
         const response =await    cloudinary.uploader
                 .upload(filePath, {
