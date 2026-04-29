@@ -23,41 +23,42 @@ const registerUser = asyncHandler(async (req, res) => {
     if (fullname.trim() === "" || password.trim() === "" || username.trim() === "" || email.trim() === "") {
         return res.status(400).json(new ApiError(400, "required", ["all fields are required"]))
     }
-    const existedUser =await User.findOne({
-        $or:[{ username },{ email}]
-    })
-    if (existedUser) {
-        return res.status(409).json(new ApiError(409, "required", ["user already exists"]))
-    } 
-    const avatarLocalPath =req.files?.avatar[0]?.path
-    const coverImageLocalPath =req.files?.coverImage[0]?.path
-    if (!avatarLocalPath) {
-        return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
-    }
-    const cloudnaryAvatar = await uploadCloudinary(avatarLocalPath);
-    const cloudnaryCoverImage = await uploadCloudinary(coverImageLocalPath);
+    // const existedUser =await User.findOne({
+    //     $or:[{ username },{ email}]
+    // })
+    // if (existedUser) {
+    //     return res.status(409).json(new ApiError(409, "user already exists", ["user already exists"]))
+    // } 
+    // const avatarLocalPath =req.files?.avatar[0]?.path
+    // const coverImageLocalPath =req.files?.coverImage[0]?.path
+    // if (!avatarLocalPath) {
+    //     return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
+    // }
+    // const cloudnaryAvatar = await uploadCloudinary(avatarLocalPath);
+    // const cloudnaryCoverImage = await uploadCloudinary(coverImageLocalPath);
 
-    if (!cloudnaryAvatar) {
-        return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
-    }
-    //db entry
-    const user =await User.create({
-        username:username.toLowerCase(),
-        fullname,
-        avatar: cloudnaryAvatar.url,
-        coverImage: cloudnaryAvatar?.url || "",
-        email: email,
-        password,
+    // if (!cloudnaryAvatar) {
+    //     return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
+    // }
+    // //db entry
+    // const user =await User.create({
+    //     username:username.toLowerCase(),
+    //     fullname,
+    //     avatar: cloudnaryAvatar.url,
+    //     coverImage: cloudnaryAvatar?.url || "",
+    //     email: email,
+    //     password,
 
         
-    })
-    const createdUser = await User.findById(user._id).select(
-        "-password -refreshToken"
-    )
-    if (!createdUser) {
-        return res.status(500).json(new ApiError(500, "Somthing went wrong", ["avatar image are required"]))
-    }
-    return res.status(201).json(new ApiResponse(201,"Created user successfully",createdUser))
+    // })
+    // const createdUser = await User.findById(user._id).select(
+    //     "-password -refreshToken"
+    // )
+    // if (!createdUser) {
+    //     return res.status(500).json(new ApiError(500, "Somthing went wrong", ["avatar image are required"]))
+    // }
+    // return res.status(201).json(new ApiResponse(201, "Created user successfully", createdUser))
+    
 })
 
 
