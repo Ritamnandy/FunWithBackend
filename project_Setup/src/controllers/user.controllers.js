@@ -3,7 +3,7 @@ import { asyncHandler } from '../utils/asynchandler.js';
 import { ApiError } from "../utils/apierror.js";
 import User from "../models/user.model.js"
 import { uploadCloudinary } from "../utils/cloudinary.js";
-
+import { ApiResponse } from "../utils/apiresponse.js";
 const registerUser = asyncHandler(async (req, res) => {
     //get users details from frontend
     // validation -not empty
@@ -34,10 +34,30 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!avatarLocalPath) {
         return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
     }
-    const cloudnaryavatar = await uploadCloudinary(avatarLocalPath);
+    const cloudnaryAvatar = await uploadCloudinary(avatarLocalPath);
+    const cloudnaryCoverImage = await uploadCloudinary(coverImageLocalPath);
 
+    if (!cloudnaryAvatar) {
+        return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
+    }
+    //db entry
+    const user =await User.create({
+        username:username.toLowerCase(),
+        fullname,
+        avatar: cloudnaryAvatar.url,
+        coverImage: cloudnaryAvatar?.url || "",
+        email: email,
+        password,
 
-
+        
+    })
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    )
+    if (!createdUser) {
+        return res.status(500).json(new ApiError(500, "Somthing went wrong", ["avatar image are required"]))
+    }
+    return res.status(201).json(new ApiResponse(201,"Created user successfully",createdUser))
 })
 
 

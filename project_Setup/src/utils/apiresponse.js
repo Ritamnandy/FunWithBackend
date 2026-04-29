@@ -8,3 +8,5 @@ class ApiResponse{
         this.timestamp = new Date().toISOString();
     }
 }
+
+export { ApiResponse }
