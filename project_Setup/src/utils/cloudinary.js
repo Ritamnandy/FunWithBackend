@@ -30,7 +30,8 @@ const uploadCloudinary = async (filePath) => {
         
     } catch (error) {
         fs.unlinkSync(filePath); //remove file if upload file failed
-            console.log('Could not upload done');
+        console.log('Could not upload done');
+        return null;
     }
 }
 
