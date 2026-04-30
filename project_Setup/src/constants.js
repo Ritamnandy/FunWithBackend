@@ -1,2 +1,4 @@
 
-export const db_name ="first_db"
+const db_name = "first_db";
+
+export { db_name };
