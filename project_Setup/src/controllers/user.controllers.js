@@ -43,8 +43,8 @@ const registerUser = asyncHandler(async (req, res) => {
         return res.status(400).json(new ApiError(400, "required", ["avatar image are required"]))
     }
 
-    console.log(avatarLocalPath);
-    console.log(coverImageLocalPath);
+    // console.log(avatarLocalPath);
+    // console.log(coverImageLocalPath);
 
     const cloudnaryAvatar = await uploadCloudinary(avatarLocalPath);
     const cloudnaryCoverImage = await uploadCloudinary(coverImageLocalPath);
@@ -57,7 +57,7 @@ const registerUser = asyncHandler(async (req, res) => {
         username:username.toLowerCase(),
         fullname,
         avatar: cloudnaryAvatar.url,
-        coverImage: cloudnaryAvatar?.url || "",
+        coverImage: cloudnaryCoverImage?.url || "",
         email: email,
         password,
 
