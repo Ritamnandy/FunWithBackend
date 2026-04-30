@@ -1,7 +1,9 @@
 
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
+import dotenv from "dotenv";
 
+dotenv.config();
 
 
 
@@ -13,7 +15,13 @@ cloudinary.config({
 });
 
 
+
 const uploadCloudinary = async (filePath) => {
+    // console.log(filePath);
+    // console.log(process.env.CLOUD_NAME);
+    // console.log(process.env.CLOUD_API_KEY);
+    // console.log(process.env.CLOUD_API_SECRET);
+    // console.log(cloudinary.config());
     try {
         if (!filePath) {
 
@@ -21,16 +29,18 @@ const uploadCloudinary = async (filePath) => {
             return null;
         }
 
-        const response =await    cloudinary.uploader
+        const response =await  cloudinary.uploader
                 .upload(filePath, {
                     resource_type: "auto",
                 })
-            console.log("file is uploaded on Cloudinary",response.url);
+            // console.log("file is uploaded on Cloudinary",response.url);
         return response;    
         
     } catch (error) {
         fs.unlinkSync(filePath); //remove file if upload file failed
+        // console.log(error);
         console.log('Could not upload done');
+        
         return null;
     }
 }
@@ -39,4 +49,3 @@ export { uploadCloudinary };
 
 
 // Log the configuration
-// console.log(cloudinary.config());
