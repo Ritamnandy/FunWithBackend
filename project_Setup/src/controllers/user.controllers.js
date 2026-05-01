@@ -4,7 +4,7 @@ import { ApiError } from "../utils/apierror.js";
 import User from "../models/user.model.js"
 import { uploadCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiresponse.js";
-import path from 'path';
+
 
 
 const generateAccessTokenAndRefreshToken = async (userId) => {

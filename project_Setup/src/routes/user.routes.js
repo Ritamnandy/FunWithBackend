@@ -2,7 +2,7 @@
 
 import express from "express";
 import { verifyJWT } from "../middlewares/auth.middlewars.js";
-import { registerUser,loginUser } from "../controllers/user.controllers.js";
+import { registerUser,loginUser,logoutUser } from "../controllers/user.controllers.js";
 
 import {upload} from "../middlewares/multer.middlewares.js";
 
