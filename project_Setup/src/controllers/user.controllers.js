@@ -10,13 +10,15 @@ import { ApiResponse } from "../utils/apiresponse.js";
 const generateAccessTokenAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
-        const accessToken= user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
+        const accessToken=await user.generateAccessToken();
+        const refreshToken =await user.generateRefreshToken();
+        
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false });
+        
         return { accessToken, refreshToken };
     } catch (error) {
-        console.log("tokens not created");
+        throw new ApiError(400,"error",["tokrn not created",error])
         
         console.log(error);
         // return {};
@@ -98,7 +100,9 @@ const loginUser = asyncHandler(async (req, res) => {
     //check password
     // send and generated refresh and access token
     // send response
+
     const { email, username, password } = req.body;
+
     if (!email || !username) {
         return res.status(400).json(new ApiError(400, "username or email required", ["bad reqquest", "username or email required"]))
     }
@@ -119,8 +123,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const {accessToken,refreshToken }= await  generateAccessTokenAndRefreshToken(user._id)
-
-
+    
     const loggedInUser=await User.findById(user._id).select("-password -refreshToken");
 
     const options = {
@@ -132,13 +135,9 @@ const loginUser = asyncHandler(async (req, res) => {
         .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(new ApiResponse(200,"login acessfully",{user:loggedInUser,accessToken,refreshToken}))
+        .json(new ApiResponse(200,"login acessfully",{user:loggedInUser,accessT:accessToken,refreshT:refreshToken}))
 
 })
-
-
-
-
 
 
 
@@ -146,8 +145,8 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
     
     const user = await User.findByIdAndUpdate(req.user._id, {
-        $set:{refreshToken:undefined}
-    }, { new: true });
+        $set:{refreshToken:''}
+    }, { returnDocument: 'after' });
     
     const options = {
         httpOnly: true,
