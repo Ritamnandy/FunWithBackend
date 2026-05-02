@@ -124,7 +124,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const { accessToken, refreshToken } = await generateAccessTokenAndRefreshToken(user._id)
 
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");//optation
 
     const options = {
         httpOnly: true,
@@ -160,14 +160,14 @@ const logoutUser = asyncHandler(async (req, res) => {
 const refreshAccessToken = asyncHandler(async (req, res) => {
 
     const inComingToken = req.cookies.refreshToken || req.body.refreshToken;
-    console.log("\nin", inComingToken);
+    // console.log("\nin", inComingToken);
     if (!inComingToken) {
         throw new ApiError(401, "Unotherized user", ["Unotherized user"]);
     }
 
     try {
         const decodedToken = jwt.verify(inComingToken, process.env.REFRESH_TOKEN_SECRET)
-        console.log("\ndecode", decodedToken);
+        // console.log("\ndecode", decodedToken);
 
         const user = await User.findById(decodedToken?._id);
         if (!user) {
