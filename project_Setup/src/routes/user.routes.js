@@ -2,7 +2,7 @@
 
 import express from "express";
 import { verifyJWT } from "../middlewares/auth.middlewars.js";
-import { registerUser, loginUser, logoutUser, refreshAccessToken } from "../controllers/user.controllers.js";
+import { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser } from "../controllers/user.controllers.js";
 
 import { upload } from "../middlewares/multer.middlewares.js";
 
@@ -25,4 +25,6 @@ router.route("/register").post(
 router.route("/login").post(loginUser)
 router.route("/logout").post(verifyJWT, logoutUser)
 router.route("/refresh-token").post(refreshAccessToken)
+router.route("/password-change").post(verifyJWT, changeCurrentPassword)
+router.route("/get-current-user").get(verifyJWT, getCurrentUser)
 export default router;

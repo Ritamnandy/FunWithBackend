@@ -191,5 +191,50 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 })
 
 
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken }
+    const user = await User.findById(req.user?._id);
+    const isPasswordCurrect = await user.isPasswordCorrect(oldPassword)
+    if (!isPasswordCurrect) {
+        return res.status(400)
+            .json(new ApiError(400, "password is incurrect", ["password is incurrect"]))
+    }
+    // console.log(isPasswordCurrect);
+
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+    res.status(200)
+        .json(new ApiResponse(200, "password change sucessfully"));
+})
+
+const getCurrentUser = asyncHandler(async function name(req, res) {
+
+
+    res.status(200).json(new ApiResponse(200, "current user details", req.user));
+})
+
+
+
+// const updateAccountsDetails= asyncHandler(async (req,res) => {
+//     const {username,}
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser }
