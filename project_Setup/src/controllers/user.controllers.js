@@ -216,25 +216,91 @@ const getCurrentUser = asyncHandler(async function name(req, res) {
 
 
 
-// const updateAccountsDetails= asyncHandler(async (req,res) => {
-//     const {username,}
-// })
+const updateAccountsDetails = asyncHandler(async (req, res) => {
+
+
+    const { fullname, email } = req.body
+    // console.log(req.body);
+    if (!fullname || !email) {
+        return res.status(400).json(new ApiError(400, "required", ["fields are required "]))
+    }
+    if (fullname.trim() === "" || email.trim() === "") {
+        return res.status(400).json(new ApiError(400, "required", ["fields are required"]))
+    }
+
+
+    const user = await User.findByIdAndUpdate(req.user?._id, {
+        $set: {
+            fullname,
+            email: email
+        }
+    }, { returnDocument: "after" }).select("-password -refreshToken")
+    if (!user) {
+        return res.status(404).json(new ApiError(404, "user not found", ["user not found"]))
+    }
+    res.status(200)
+        .json(new ApiResponse(200, "Account updated successfully", user));
+})
+
+
+const updateAvatarImages = asyncHandler(async (req, res) => {
+    const localAvatarPath = req.file?.path || null;
+    if (!localAvatarPath) {
+        return res.status(400).json(new ApiError(400, "avatar required", ["avatar images required"]))
+    }
+    const cloudnaryAvatar = await uploadCloudinary(localAvatarPath)
+    if (!cloudnaryAvatar) {
+        return res.status(400).json(new ApiError(400, "avatar required", ["avatar images massing"]))
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id, {
+        $set: {
+            avatar: cloudnaryAvatar.url
+        }
+    }, { returnDocument: "after" }).select("-password -refreshToken")
+
+
+    res.status(200).json(new ApiResponse(200, "avatar update sucessfully", user));
+
+
+})
 
 
 
 
+const updateCoverImages = asyncHandler(async (req, res) => {
+    const localCoverImgPath = req.file?.path || null;
+    if (!localCoverImgPath) {
+        return res.status(400).json(new ApiError(400, "avatar required", ["avatar images required"]))
+    }
+    const cloudnaryCoverImage = await uploadCloudinary(localCoverImgPath)
+    if (!cloudnaryCoverImage) {
+        return res.status(400).json(new ApiError(400, "avatar required", ["avatar images massing"]))
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id, {
+        $set: {
+            coverImage: cloudnaryCoverImage.url
+        }
+    }, { returnDocument: "after" }).select("-password -refreshToken")
+
+
+    res.status(200).json(new ApiResponse(200, "cover image update sucessfully", user));
+
+
+})
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser }
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountsDetails,
+    updateAvatarImages,
+    updateCoverImages
+}
