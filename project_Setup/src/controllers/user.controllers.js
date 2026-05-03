@@ -208,7 +208,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "password change sucessfully"));
 })
 
-const getCurrentUser = asyncHandler(async function name(req, res) {
+const getCurrentUser = asyncHandler(async (req, res) => {
 
 
     res.status(200).json(new ApiResponse(200, "current user details", req.user));
@@ -314,16 +314,16 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                 from: "subscriptions",
                 localField: "_id",
                 foreignField: "subscriber",
-                as: "subscriberedTo"
+                as: "subscribedTo"
             }
         },
         {
             $addFields: {
                 subscribersCount: {
-                    $sixe: "$subscribers"
+                    $size: "$subscribers"
                 },
                 channelsubscriberedCount: {
-                    $sixe: "$subscriberedTo"
+                    $size: "$subscriberedTo"
                 },
                 isSubscribed: {
                     $cond: {
@@ -349,7 +349,6 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, "user channel fetched successfully", channel[0]))
 
 })
-
 
 
 
